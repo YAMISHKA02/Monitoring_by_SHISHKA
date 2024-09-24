@@ -21,7 +21,6 @@ show "|  \| || | | || | | ||  _|  \___ \              "
 show "| |\  || |_| || |_| || |___  ___) |             "
 show "|_| \_| \___/ |____/ |_____||____/              "
 
-
 # Директория для конфигурации
 CONFIG_DIR="/etc/node_exporter_configs"
 MAIN_CONFIG_FILE="$CONFIG_DIR/main.conf"
@@ -61,6 +60,12 @@ sudo rm -f /etc/systemd/system/node_exporter.service
 sudo rm -f /usr/local/bin/node_exporter
 sudo userdel node_exporter 2>/dev/null
 sudo systemctl daemon-reload
+
+# Удаление предыдущего сервиса push_metrics, если он существует
+echo "Удаление предыдущего сервиса push_metrics, если он есть..."
+sudo systemctl stop push_metrics 2>/dev/null
+sudo systemctl disable push_metrics 2>/dev/null
+sudo rm -f /etc/systemd/system/push_metrics.service
 
 # Создание пользователя для Node Exporter
 sudo useradd -rs /bin/false node_exporter
