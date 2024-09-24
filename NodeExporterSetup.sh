@@ -40,9 +40,24 @@ else
     echo "Основной конфигурационный файл уже существует: $MAIN_CONFIG_FILE"
 fi
 
-# Запрос данных у пользователя
-read -p "Введите ник: " user_nick
-read -p "Введите имя ноды: " node_name
+# Запрос данных у пользователя с проверкой
+while true; do
+    read -p "Введите ник: " user_nick
+    if [[ -z "$user_nick" || "$user_nick" =~ [^a-zA-Z0-9_] ]]; then
+        echo "Ник должен содержать только буквы, цифры и символ '_'. Попробуйте еще раз."
+    else
+        break
+    fi
+done
+
+while true; do
+    read -p "Введите имя ноды: " node_name
+    if [[ -z "$node_name" || "$node_name" =~ [^a-zA-Z0-9_] ]]; then
+        echo "Имя ноды должно содержать только буквы, цифры и символ '_'. Попробуйте еще раз."
+    else
+        break
+    fi
+done
 
 # Получение адреса сервера
 server_address=$(hostname -I | awk '{print $1}')
