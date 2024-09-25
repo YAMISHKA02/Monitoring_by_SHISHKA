@@ -21,6 +21,7 @@ show "|  \| || | | || | | ||  _|  \___ \              "
 show "| |\  || |_| || |_| || |___  ___) |             "
 show "|_| \_| \___/ |____/ |_____||____/              "
 
+
 # Директория для конфигурации
 CONFIG_DIR="/etc/node_exporter_configs"
 MAIN_CONFIG_FILE="$CONFIG_DIR/main.conf"
@@ -33,7 +34,7 @@ sudo mkdir -p "$CONFIG_DIR"
 # Создание основного конфигурационного файла, если он не существует
 if [[ ! -f $MAIN_CONFIG_FILE ]]; then
     echo "Создание основного конфигурационного файла $MAIN_CONFIG_FILE..."
-    echo 'PUSHGATEWAY_URL="http://194.87.77.4:9091"' | sudo tee "$MAIN_CONFIG_FILE" > /dev/null
+    echo 'PUSHGATEWAY_URL="http://62.84.182.68:9091"' | sudo tee "$MAIN_CONFIG_FILE" > /dev/null
     echo 'METRICS_INTERVAL=30' | sudo tee -a "$MAIN_CONFIG_FILE" > /dev/null
     echo 'NODE_EXPORTER_PORT=9100' | sudo tee -a "$MAIN_CONFIG_FILE" > /dev/null
 else
@@ -98,7 +99,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=nobody
+User=node_exporter
 ExecStart=/usr/local/bin/node_exporter --web.listen-address=":9100"
 Restart=always
 
@@ -153,6 +154,9 @@ EOF
 # Сделать скрипт исполняемым
 sudo chmod +x "$SCRIPT_PATH"
 
+# Создание пользователя для Push Metrics
+sudo useradd -rs /bin/false push_metrics
+
 # Создание systemd unit файла для отправки метрик
 SERVICE_FILE="/etc/systemd/system/push_metrics.service"
 cat << EOF | sudo tee "$SERVICE_FILE" > /dev/null
@@ -163,7 +167,7 @@ After=network.target
 [Service]
 ExecStart=$SCRIPT_PATH
 Restart=always
-User=nobody
+User=push_metrics
 
 [Install]
 WantedBy=multi-user.target
@@ -173,6 +177,7 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable push_metrics.service
 sudo systemctl start push_metrics.service
+
 
 show "Установка завершена! Node Exporter и сервис отправки метрик запущены."
 show "Не забудь подписаться https://t.me/shishka_crypto"
