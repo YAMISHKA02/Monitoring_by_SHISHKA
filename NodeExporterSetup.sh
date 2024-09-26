@@ -35,7 +35,7 @@ sudo mkdir -p "$CONFIG_DIR"
 if [[ ! -f $MAIN_CONFIG_FILE ]]; then
     echo "Создание основного конфигурационного файла $MAIN_CONFIG_FILE..."
     echo 'PUSHGATEWAY_URL="http://62.84.182.68:9091"' | sudo tee "$MAIN_CONFIG_FILE" > /dev/null
-    echo 'METRICS_INTERVAL=30' | sudo tee -a "$MAIN_CONFIG_FILE" > /dev/null
+    echo 'METRICS_INTERVAL=15' | sudo tee -a "$MAIN_CONFIG_FILE" > /dev/null
     echo 'NODE_EXPORTER_PORT=9100' | sudo tee -a "$MAIN_CONFIG_FILE" > /dev/null
 else
     echo "Основной конфигурационный файл уже существует: $MAIN_CONFIG_FILE"
